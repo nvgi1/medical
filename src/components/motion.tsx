@@ -93,6 +93,15 @@ export function useScrollReveal(dep: unknown) {
     };
 
     prepare(document);
+    // Route transitions mount content asynchronously. Give the browser a frame
+    // to lay it out, then fail open so a missed IntersectionObserver callback
+    // can never leave a whole page invisible until the user refreshes.
+    const firstLayout = requestAnimationFrame(() => prepare(document));
+    const revealFallback = window.setTimeout(() => {
+      document.querySelectorAll<HTMLElement>(".reveal:not(.is-in)").forEach((el) => {
+        el.classList.add("is-in");
+      });
+    }, 900);
     const mo = new MutationObserver((mutations) => {
       for (const mutation of mutations)
         mutation.addedNodes.forEach((node) => {
@@ -102,6 +111,8 @@ export function useScrollReveal(dep: unknown) {
     mo.observe(document.body, { childList: true, subtree: true });
 
     return () => {
+      cancelAnimationFrame(firstLayout);
+      window.clearTimeout(revealFallback);
       io.disconnect();
       mo.disconnect();
     };
@@ -219,7 +230,7 @@ export function RouteWipe({ trigger }: { trigger: string }) {
     }
     if (reduce) return;
     setActive(true);
-    const timer = window.setTimeout(() => setActive(false), 380);
+    const timer = window.setTimeout(() => setActive(false), 240);
     return () => window.clearTimeout(timer);
   }, [trigger, reduce]);
 
@@ -232,13 +243,13 @@ export function RouteWipe({ trigger }: { trigger: string }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.18 }}
+            transition={{ duration: 0.12 }}
         >
           <motion.span
             className="route-wipe-line"
             initial={{ y: "-4vh", opacity: 0 }}
             animate={{ y: "104vh", opacity: [0, 1, 1, 0] }}
-            transition={{ duration: 0.62, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 0.34, ease: [0.4, 0, 0.2, 1] }}
           />
         </motion.div>
       )}

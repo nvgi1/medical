@@ -483,16 +483,16 @@ function Shell() {
       )}
       <main id="main">
         <motion.div
-          key={location.pathname}
+          key={`${location.pathname}${location.search}`}
           className="route-view"
           initial={
             reduce
               ? { opacity: 0 }
-              : { opacity: 0, y: 22, scale: 0.996, filter: "blur(9px)" }
+              : { opacity: 0 }
           }
-          animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+          animate={{ opacity: 1 }}
           transition={{
-            duration: reduce ? 0.15 : 0.6,
+            duration: reduce ? 0.1 : 0.22,
             ease: [0.22, 1, 0.36, 1],
           }}
         >
@@ -1890,7 +1890,13 @@ function IntroGate({ onEnter }: { onEnter: () => void }) {
         muted
         loop
         playsInline
-        preload={videoReady ? "auto" : "none"}
+        preload={
+          videoReady
+            ? window.matchMedia("(max-width: 800px), (pointer: coarse)").matches
+              ? "metadata"
+              : "auto"
+            : "none"
+        }
         poster="/preview/home-3d.png"
         aria-hidden="true"
       >

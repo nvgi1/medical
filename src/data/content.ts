@@ -2,7 +2,8 @@ export type Lang = "ar" | "en";
 export type Local = { ar: string; en: string };
 export const l = (ar: string, en: string): Local => ({ ar, en });
 export const graduationProjectDownloadUrl =
-  import.meta.env.VITE_GRADUATION_PROJECT_URL || "";
+  import.meta.env.VITE_GRADUATION_PROJECT_URL ||
+  "https://docs.google.com/presentation/d/1umU1VLBsWR34SOmSRhgUo-wb8gX5s7Yj/edit?usp=sharing&ouid=115274914610507629798&rtpof=true&sd=true";
 // Replace bracketed values only with verified personal information.
 // Empty URLs are intentionally not rendered as links.
 export const profile = {
@@ -213,8 +214,8 @@ export const projectDetails: Record<
                 type: "document" as const,
                 url: graduationProjectDownloadUrl,
                 caption: l(
-                  "عرض مشروع التخرج PowerPoint",
-                  "Graduation project PowerPoint presentation",
+                  "عرض وتحميل مشروع التخرج عبر Google Slides",
+                  "Open and download the graduation project via Google Slides",
                 ),
               },
             ]

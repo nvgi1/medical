@@ -31,18 +31,19 @@ export default function Scene({
       .then((T) => {
         if (cancelled || !host.current) return;
         const el = host.current;
+        const mobile = window.matchMedia("(max-width: 800px), (pointer: coarse)").matches;
         let r: InstanceType<typeof T.WebGLRenderer>;
         try {
           r = new T.WebGLRenderer({
             alpha: true,
-            antialias: true,
+            antialias: !mobile,
             powerPreference: "low-power",
           });
         } catch {
           setFailed(true);
           return;
         }
-        r.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+        r.setPixelRatio(Math.min(devicePixelRatio, mobile ? 1 : 1.5));
         el.appendChild(r.domElement);
         const scene = new T.Scene(),
           camera = new T.PerspectiveCamera(33, 1, 0.1, 100),
@@ -591,7 +592,7 @@ export default function Scene({
         }
         scene.add(orbitRig);
         const stars = [];
-        for (let i = 0; i < 160; i++) {
+        for (let i = 0; i < (mobile ? 72 : 160); i++) {
           stars.push(
             (Math.random() - 0.5) * 8,
             (Math.random() - 0.5) * 7,
@@ -697,7 +698,7 @@ export default function Scene({
         let firstFrame = false;
         const tick = (now: number) => {
           raf = requestAnimationFrame(tick);
-          if (!visible || document.hidden || now - last < 32) return;
+          if (!visible || document.hidden || now - last < (mobile ? 42 : 32)) return;
           last = now;
           const moving = !reduced.matches && !pausedRef.current;
           group.rotation.y +=

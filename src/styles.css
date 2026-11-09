@@ -3242,6 +3242,17 @@ main {
   transform: none;
   filter: blur(0);
 }
+@media (max-width: 800px) {
+  .reveal {
+    filter: none;
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease;
+  }
+  .route-view {
+    contain: layout paint;
+  }
+}
 /* ---------- pointer 3D tilt ---------- */
 .tilt-3d {
   --rx: 0deg;
